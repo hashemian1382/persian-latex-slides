@@ -1,0 +1,70 @@
+% !TeX program = xelatex
+% !TeX encoding = UTF-8
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%   example-minimal.tex  —  کمینه‌ترین شکلِ استفاده از قالب
+%%
+%%   کامپایل:  xelatex example-minimal.tex     (دو بار)
+%%
+%%   این فایل نشان می‌دهد که برای یک ارائهٔ کوچک، چهار چیز کافی است:
+%%     ۱) مسیرهای \input@path      ۲) \usetheme
+%%     ۳) چند سطر مشخصات          ۴) \input{config/fonts.tex} در پایان پیش‌درآمد
+%%
+%%   نه config/packages.tex لازم است و نه config/info.tex؛ هر دو برای پروژهٔ کامل
+%%   main.tex هستند.  بسته‌های موردنیاز خودِ قالب (graphicx، tikz، tcolorbox،
+%%   listings) را theme/ خودش بار می‌کند.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[11pt,aspectratio=169]{beamer}
+
+\makeatletter
+\def\input@path{{./}{theme/}{config/}{content/}{universities/}}
+\makeatother
+
+\usetheme[palette=navy,mode=light]{PersianThesis}
+
+\PTsetup{
+  progressbar = foot,
+  numbering   = fraction,
+  sectionpage = false,      % ارائهٔ کوتاه، اسلاید جداکننده لازم نیست
+}
+
+% ---- مشخصات (کمینه) --------------------------------------------------------
+\university{دانشگاه نمونه}
+\shortuniversity{دانشگاه نمونه}
+\faculty{دانشکدهٔ مهندسی کامپیوتر}
+\degree{کارشناسی}
+\title{عنوان ارائهٔ شما}
+\shorttitle{عنوان کوتاه}
+\author{نام و نام خانوادگی}
+\supervisor{دکتر نام استاد راهنما}
+\date{مرداد ۱۴۰۵}
+
+% ---- فونت‌ها: همیشه آخرین ورودی پیش‌درآمد ----------------------------------
+\input{config/fonts.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+\PTtitleframe
+
+\section{نمونه}
+
+\begin{frame}{یک اسلاید نمونه}{زیرعنوان اختیاری}
+  \begin{itemize}
+    \item فهرست‌ها، \term{اصطلاح‌ها} و \hl{تأکیدها} همه آماده‌اند.
+    \item متن انگلیسی درون \en{...} می‌آید: \en{Retrieval-Augmented Generation}.
+  \end{itemize}
+
+  \begin{PTdef}[\en{RAG}]
+    الگویی که پیش از تولید پاسخ، اسناد مرتبط را از منبعی بیرونی بازیابی می‌کند.
+  \end{PTdef}
+
+  \begin{PTnote}
+    جعبه‌های آمادهٔ دیگر: \en{PTthm}، \en{PTpros}، \en{PTcons}، \en{PTresult}،
+    \en{PTexample}، \en{PTcallout}.
+  \end{PTnote}
+\end{frame}
+
+\PTclosingframe
+
+\end{document}

@@ -1,0 +1,127 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%  beamerthemePersianThesis.sty
+%%  The main theme.  Loads the four sub-themes and exposes the single
+%%  user-facing configuration command \PTsetup{...}.
+%%
+%%  USAGE (in main.tex)
+%%  -------------------
+%%      \usetheme[palette=indigo,mode=light]{PersianThesis}
+%%      \PTsetup{numbering=fraction,progressbar=foot}
+%%
+%%  Every key can be given either as a class-style option to \usetheme or,
+%%  later in the preamble, through \PTsetup.  The two are exactly equivalent.
+%%
+%%  KEY REFERENCE
+%%  -------------
+%%    palette     = indigo | navy | teal | maroon | forest | plum | graphite
+%%                  (or any name registered with \PTdefinepalette)
+%%    mode        = light | dark
+%%    primary     = RRGGBB      overrides the palette's primary colour
+%%    secondary   = RRGGBB      overrides the palette's secondary colour
+%%    accent      = RRGGBB      overrides the palette's accent colour
+%%    progressbar = none | foot | head | both
+%%    numbering   = fraction | plain | none
+%%    footline    = true | false        textual footer
+%%    eyebrow     = true | false        "فصل ۲ : ..." above every frame title
+%%    sectionpage = true | false        automatic chapter divider frames
+%%    tocnumbers  = true | false        numbers in the outline
+%%    margin      = <length>            left/right text margin
+%%    logo        = <file>              e.g. figures/logos/sharif.pdf
+%%    secondlogo  = <file>
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{beamerthemePersianThesis}[2026/08/29 v1.0 Persian thesis beamer theme]
+
+\mode<presentation>
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 1. Sub-themes
+%%
+%%  persian-thesis-utils must come first: it declares the lengths and the
+%%  \ifPT... switches that the other three read while they are being loaded.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\RequirePackage{persian-thesis-utils}
+
+\usecolortheme{PersianThesis}
+\usefonttheme{PersianThesis}
+\useinnertheme{PersianThesis}
+\useoutertheme{PersianThesis}
+
+% Ready-made coloured boxes (تعریف / قضیه / نکته / ...) and the code listing
+% environment.  Comment the next line out if you do not want tcolorbox.
+\RequirePackage{persian-thesis-boxes}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 2. Small helpers used by the key handlers
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Re-derive every colour from the current raw brand colours.  Used by the
+% primary/secondary/accent keys, which must *not* re-run the palette (that would
+% throw the override away again).
+\newcommand{\PT@rederive}{%
+  \@nameuse{PT@mode@\PT@colormode}%
+  \PT@beamercolors
+}
+
+% A tiny, dependency-free boolean setter: \PT@setbool{PTeyebrow}{true}
+\newcommand{\PT@boolval}{}
+\newcommand{\PT@booltrue}{true}
+\newcommand{\PT@setbool}[2]{%
+  \def\PT@boolval{#2}%
+  \ifx\PT@boolval\PT@booltrue
+    \@nameuse{#1true}%
+  \else
+    \@nameuse{#1false}%
+  \fi
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 3. The \PTsetup key/value interface  (pgfkeys comes with tikz)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pgfkeys{/PT/.is family}
+
+\pgfkeys{/PT,
+  % ---- colours ------------------------------------------------------------
+  palette/.code       = {\renewcommand{\PT@palette}{#1}\PT@applycolors},
+  mode/.code          = {\renewcommand{\PT@colormode}{#1}\PT@applycolors},
+  primary/.code       = {\definecolor{PTrawprimary}{HTML}{#1}\PT@rederive},
+  secondary/.code     = {\definecolor{PTrawsecondary}{HTML}{#1}\PT@rederive},
+  accent/.code        = {\definecolor{PTrawaccent}{HTML}{#1}\PT@rederive},
+  % ---- progress bar -------------------------------------------------------
+  progressbar/.is choice,
+  progressbar/none/.code = {\PTprogressfootfalse\PTprogressheadfalse},
+  progressbar/foot/.code = {\PTprogressfoottrue \PTprogressheadfalse},
+  progressbar/head/.code = {\PTprogressfootfalse\PTprogressheadtrue},
+  progressbar/both/.code = {\PTprogressfoottrue \PTprogressheadtrue},
+  progressbar/.default   = foot,
+  % ---- frame numbering ----------------------------------------------------
+  numbering/.is choice,
+  numbering/fraction/.code = {\renewcommand{\PT@numbering}{fraction}},
+  numbering/plain/.code    = {\renewcommand{\PT@numbering}{plain}},
+  numbering/none/.code     = {\renewcommand{\PT@numbering}{none}},
+  numbering/.default       = fraction,
+  % ---- switches -----------------------------------------------------------
+  footline/.code      = {\PT@setbool{PTfootline}{#1}},    footline/.default    = true,
+  eyebrow/.code       = {\PT@setbool{PTeyebrow}{#1}},     eyebrow/.default     = true,
+  sectionpage/.code   = {\PT@setbool{PTsectionpage}{#1}}, sectionpage/.default = true,
+  tocnumbers/.code    = {\PT@setbool{PTtocnumbers}{#1}},  tocnumbers/.default  = true,
+  % ---- geometry and logos -------------------------------------------------
+  margin/.code        = {\setlength{\PTmargin}{#1}%
+                         \setbeamersize{text margin left=\PTmargin,%
+                                        text margin right=\PTmargin}},
+  logo/.code          = {\PTlogofile{#1}},
+  secondlogo/.code    = {\PTsecondlogofile{#1}},
+  % ---- a readable error for typos ----------------------------------------
+  .unknown/.code      = {\PackageWarning{beamerthemePersianThesis}%
+                          {Unknown \string\PTsetup\space key `\pgfkeyscurrentname'}},
+}
+
+\newcommand{\PTsetup}[1]{\pgfkeys{/PT,#1}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 4. Options given to \usetheme[...]{PersianThesis}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\DeclareOption*{\expandafter\PTsetup\expandafter{\CurrentOption}}
+\ProcessOptions\relax
+
+\mode<all>
+\endinput

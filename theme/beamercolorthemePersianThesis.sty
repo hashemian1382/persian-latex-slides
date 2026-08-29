@@ -1,0 +1,160 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%  beamercolorthemePersianThesis.sty
+%%  Palette engine + every beamer colour used by the theme.
+%%
+%%  A palette only fixes three brand colours (primary / secondary / accent).
+%%  All neutrals come from the light or dark "mode".  Everything else is derived,
+%%  so a university can be re-skinned by a single \PTsetup{palette=...} or by
+%%  \PTdefinepalette{myuni}{123456}{234567}{C8A54B}.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{beamercolorthemePersianThesis}[2026/08/29 v1.0 Persian thesis colour theme]
+
+\mode<presentation>
+
+\RequirePackage{xcolor}
+\RequirePackage{etoolbox}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 1. Palette registry
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\PTdefinepalette}[4]{%
+  \@namedef{PT@palette@#1}{%
+    \definecolor{PTrawprimary}{HTML}{#2}%
+    \definecolor{PTrawsecondary}{HTML}{#3}%
+    \definecolor{PTrawaccent}{HTML}{#4}%
+  }%
+}
+
+%                     name          primary   secondary  accent
+\PTdefinepalette{indigo}    {243B6B}{4A5FA5}{C8912E}
+\PTdefinepalette{navy}      {13293D}{2B5876}{D08C3C}
+\PTdefinepalette{teal}      {0E4F52}{1C7C78}{C96F4A}
+\PTdefinepalette{maroon}    {6A1B2A}{9B2C3C}{B08427}
+\PTdefinepalette{forest}    {1B4332}{2D6A4F}{B98B4E}
+\PTdefinepalette{plum}      {45204C}{74337F}{C68B3E}
+\PTdefinepalette{graphite}  {24272E}{454A56}{B4843A}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 2. Neutrals per mode
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\PT@mode@light}{%
+  \definecolor{PTpaper}  {HTML}{FFFFFF}%
+  \definecolor{PTsurface}{HTML}{F4F6FA}%
+  \definecolor{PTink}    {HTML}{1B1D24}%
+  \definecolor{PTmuted}  {HTML}{6A7383}%
+  \definecolor{PTline}   {HTML}{DEE3EC}%
+  \definecolor{PTsuccess}{HTML}{1F7A4C}%
+  \definecolor{PTdanger} {HTML}{B23A34}%
+  \colorlet{PTprimary}  {PTrawprimary}%
+  \colorlet{PTsecondary}{PTrawsecondary}%
+  \colorlet{PTaccent}   {PTrawaccent}%
+  \colorlet{PTaccentdark}{PTrawaccent!82!black}%
+  \colorlet{PTprimarysoft}{PTrawprimary!8!PTpaper}%
+  \colorlet{PTaccentsoft} {PTrawaccent!12!PTpaper}%
+}
+
+\newcommand{\PT@mode@dark}{%
+  \definecolor{PTpaper}  {HTML}{15171D}%
+  \definecolor{PTsurface}{HTML}{1E212A}%
+  \definecolor{PTink}    {HTML}{ECEFF5}%
+  \definecolor{PTmuted}  {HTML}{9AA3B4}%
+  \definecolor{PTline}   {HTML}{2E3340}%
+  \definecolor{PTsuccess}{HTML}{5DC08C}%
+  \definecolor{PTdanger} {HTML}{E4746B}%
+  \colorlet{PTprimary}  {PTrawprimary!30!white}%
+  \colorlet{PTsecondary}{PTrawsecondary!45!white}%
+  \colorlet{PTaccent}   {PTrawaccent!75!white}%
+  \colorlet{PTaccentdark}{PTrawaccent!85!white}%
+  \colorlet{PTprimarysoft}{PTrawprimary!22!PTpaper}%
+  \colorlet{PTaccentsoft} {PTrawaccent!18!PTpaper}%
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 3. Mapping the abstract palette onto beamer colours
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\PT@palette}{indigo}
+\newcommand{\PT@colormode}{light}
+
+\newcommand{\PT@beamercolors}{%
+  % ---- base ---------------------------------------------------------------
+  \setbeamercolor{normal text}{fg=PTink,bg=PTpaper}%
+  \setbeamercolor{background canvas}{bg=PTpaper}%
+  \setbeamercolor{structure}{fg=PTprimary}%
+  \setbeamercolor{alerted text}{fg=PTdanger}%
+  \setbeamercolor{example text}{fg=PTsuccess}%
+  \setbeamercolor{math text}{fg=PTink}%
+  % ---- title page ---------------------------------------------------------
+  \setbeamercolor{titlelike}{fg=PTprimary}%
+  \setbeamercolor{title}{fg=PTprimary}%
+  \setbeamercolor{subtitle}{fg=PTsecondary}%
+  \setbeamercolor{author}{fg=PTink}%
+  \setbeamercolor{institute}{fg=PTmuted}%
+  \setbeamercolor{date}{fg=PTmuted}%
+  \setbeamercolor{PT invocation}{fg=PTsecondary}%
+  \setbeamercolor{PT latin title}{fg=PTmuted}%
+  \setbeamercolor{PT info label}{fg=PTmuted}%
+  \setbeamercolor{PT info value}{fg=PTink}%
+  % ---- frames -------------------------------------------------------------
+  \setbeamercolor{frametitle}{fg=PTprimary,bg=}%
+  \setbeamercolor{framesubtitle}{fg=PTmuted}%
+  \setbeamercolor{PT eyebrow}{fg=PTaccentdark}%
+  % ---- footline -----------------------------------------------------------
+  \setbeamercolor{footline}{fg=PTmuted}%
+  \setbeamercolor{footline emph}{fg=PTprimary}%
+  \setbeamercolor{progress bar}{fg=PTprimary,bg=PTline}%
+  % ---- section pages and table of contents --------------------------------
+  \setbeamercolor{section number}{fg=PTaccentdark}%
+  \setbeamercolor{section title}{fg=PTprimary}%
+  \setbeamercolor{section in toc}{fg=PTink}%
+  \setbeamercolor{section in toc shaded}{fg=PTmuted}%
+  \setbeamercolor{subsection in toc}{fg=PTsecondary}%
+  \setbeamercolor{subsection in toc shaded}{fg=PTmuted}%
+  \setbeamercolor{PT toc number}{fg=PTaccentdark}%
+  % ---- lists --------------------------------------------------------------
+  \setbeamercolor{itemize item}{fg=PTaccentdark}%
+  \setbeamercolor{itemize subitem}{fg=PTsecondary}%
+  \setbeamercolor{itemize subsubitem}{fg=PTmuted}%
+  \setbeamercolor{enumerate item}{fg=PTprimary}%
+  \setbeamercolor{enumerate subitem}{fg=PTsecondary}%
+  \setbeamercolor{description item}{fg=PTprimary}%
+  % ---- blocks -------------------------------------------------------------
+  \setbeamercolor{block title}{fg=PTpaper,bg=PTprimary}%
+  \setbeamercolor{block body}{fg=PTink,bg=PTsurface}%
+  \setbeamercolor{block title alerted}{fg=PTpaper,bg=PTdanger}%
+  \setbeamercolor{block body alerted}{fg=PTink,bg=PTdanger!8!PTpaper}%
+  \setbeamercolor{block title example}{fg=PTpaper,bg=PTsuccess}%
+  \setbeamercolor{block body example}{fg=PTink,bg=PTsuccess!8!PTpaper}%
+  % ---- miscellaneous ------------------------------------------------------
+  \setbeamercolor{caption name}{fg=PTsecondary}%
+  \setbeamercolor{bibliography item}{fg=PTprimary}%
+  \setbeamercolor{bibliography entry author}{fg=PTink}%
+  \setbeamercolor{bibliography entry title}{fg=PTink}%
+  \setbeamercolor{bibliography entry location}{fg=PTmuted}%
+  \setbeamercolor{bibliography entry note}{fg=PTmuted}%
+  \setbeamercolor{separation line}{fg=PTline}%
+  \setbeamercolor{footnote}{fg=PTmuted}%
+  \setbeamercolor{footnote mark}{fg=PTaccentdark}%
+}
+
+\newcommand{\PT@applycolors}{%
+  \@ifundefined{PT@palette@\PT@palette}{%
+    \PackageWarning{beamercolorthemePersianThesis}%
+      {Unknown palette `\PT@palette'. Falling back to `indigo'}%
+    \renewcommand{\PT@palette}{indigo}%
+  }{}%
+  \@nameuse{PT@palette@\PT@palette}%
+  \@ifundefined{PT@mode@\PT@colormode}{%
+    \PackageWarning{beamercolorthemePersianThesis}%
+      {Unknown mode `\PT@colormode'. Falling back to `light'}%
+    \renewcommand{\PT@colormode}{light}%
+  }{}%
+  \@nameuse{PT@mode@\PT@colormode}%
+  \PT@beamercolors
+}
+
+% initial state; \PTsetup{palette=...,mode=...} re-runs it
+\PT@applycolors
+
+\mode<all>
+\endinput

@@ -1,0 +1,93 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%  config/info.tex
+%%  ★ THIS IS THE ONLY FILE MOST USERS NEED TO EDIT ★
+%%
+%%  All the metadata of the defence.  Leave a field empty (or delete the line)
+%%  and the corresponding piece of the title page disappears by itself -- a
+%%  bachelor project with a single supervisor and no referee still produces a
+%%  balanced, finished-looking cover.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 1. Institution
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\university{دانشگاه صنعتی شریف}
+\shortuniversity{دانشگاه صنعتی شریف}   % used in the footer; empty = full name
+\faculty{دانشکدهٔ مهندسی کامپیوتر}
+\department{}                            % گروه/رشته, if your faculty needs it
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 2. Degree
+%%
+%%  The cover line reads:  <thesisfor label> <degree> <major>
+%%  For a bachelor's final project the usual wording is a different label:
+%%      \PTsetlabel{thesisfor}{پروژهٔ پایانی دورهٔ}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\degree{کارشناسی}                       % کارشناسی / کارشناسی ارشد / دکتری
+\major{مهندسی کامپیوتر}                 % گرایش, optional
+\academicyear{۱۴۰۴--۱۴۰۵}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 3. Title
+%%
+%%  \title      Persian title, the largest thing on the cover
+%%  \latintitle English title, set in the Latin font one size down (optional)
+%%  \subtitle   optional one-liner underneath
+%%  \shorttitle goes in the middle cell of the footer, so keep it short
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title{سامانهٔ پرسش و پاسخ هوشمند مبتنی بر وب}
+\latintitle{Intelligent Web-Based Question Answering System}
+\subtitle{}
+\shorttitle{سامانهٔ پرسش و پاسخ هوشمند}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 4. People
+%%
+%%  Only \author is mandatory.  Every other name may be left out.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\author{علی هاشمیان}
+\studentid{}                             % شمارهٔ دانشجویی, optional
+\supervisor{دکتر حمید بیگی}
+\supervisortwo{}
+\advisor{}
+\advisortwo{}
+\referee{}
+\refereetwo{}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 5. Date and place of the defence
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\date{مرداد ۱۴۰۵}
+\defenseplace{}                          % e.g. سالن سمینار دانشکده
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 6. Invocation
+%%
+%%  Printed in small type above the logo.  Leave empty to omit it entirely.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\invocation{بسم الله الرحمن الرحیم}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 7. Wording
+%%
+%%  Every fixed string the theme prints can be replaced here.  The full list of
+%%  keys is documented at the top of theme/persian-thesis-utils.sty.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\PTsetlabel{thesisfor}{پروژهٔ پایانی دورهٔ}
+%\PTsetlabel{student}{ارائه‌دهنده}
+%\PTsetlabel{thanks}{با تشکر از توجه شما}
+%\PTsetlabel{chapter}{بخش}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 8. PDF metadata
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\hypersetup{
+  pdftitle    = {سامانهٔ پرسش و پاسخ هوشمند مبتنی بر وب},
+  pdfauthor   = {علی هاشمیان},
+  pdfsubject  = {ارائهٔ دفاع پایان‌نامهٔ کارشناسی},
+  pdfkeywords = {پرسش و پاسخ, بازیابی اطلاعات, مدل زبانی بزرگ, RAG},
+  colorlinks  = true,
+  linkcolor   = PTprimary,
+  urlcolor    = PTsecondary,
+  citecolor   = PTaccentdark,
+}

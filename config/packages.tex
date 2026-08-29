@@ -1,0 +1,41 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%  config/packages.tex
+%%  Generic LaTeX packages used by the slides.
+%%
+%%  Deliberately short.  Everything here ships with a normal TeX Live / MiKTeX
+%%  installation, and nothing here touches fonts or text direction -- those live
+%%  in config/fonts.tex, which must stay the *last* thing loaded in the preamble
+%%  because of xepersian.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% ---- mathematics -----------------------------------------------------------
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+% ---- tables ----------------------------------------------------------------
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{colortbl}      % \rowcolor / \cellcolor
+
+% ---- graphics --------------------------------------------------------------
+% The theme pulls these in as well; loading them here too costs nothing and
+% keeps this file usable on its own.
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+\usetikzlibrary{arrows.meta}
+\usetikzlibrary{calc}
+\usetikzlibrary{fit}
+\usetikzlibrary{shapes.geometric}
+\usetikzlibrary{backgrounds}
+
+% ---- optional extras ------------------------------------------------------
+% Uncomment if you need real statistical plots.  The template itself draws its
+% charts in plain TikZ, so pgfplots is not required for it to compile.
+%\usepackage{pgfplots}
+%\pgfplotsset{compat=newest}
+
+% Table cells that keep their own direction, handy in mixed Persian/English
+% tables:  \begin{tabular}{...} ... \LTRfootnote / \lr{...}
+% (\lr comes from bidi and is available everywhere in the document body.)

@@ -1,0 +1,284 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%  persian-thesis-utils.sty
+%%  Low-level helpers for the "PersianThesis" beamer theme:
+%%  lengths, direction-safe wrappers, metadata fields, localisable labels,
+%%  logo handling and small decorative primitives.
+%%
+%%  NOTE ON BIDIRECTIONALITY
+%%  ------------------------
+%%  xepersian/bidi is loaded *after* this package (it must always be the last
+%%  package in the preamble).  Therefore nothing here may call \lr, \rl, \setLTR
+%%  at *load* time; they are only used inside macro bodies, i.e. at typesetting
+%%  time, and always guarded with \@ifundefined so that the theme also survives
+%%  a purely LTR test compilation.
+%%
+%%  The whole theme deliberately avoids \raggedright / \raggedleft in RTL
+%%  material: a one-line paragraph is flushed to the *start* of the line by
+%%  \parfillskip, which is direction-correct under bidi, whereas the ragged
+%%  commands are not reliably mirrored.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{persian-thesis-utils}[2026/08/29 v1.0 Persian thesis beamer utilities]
+
+\RequirePackage{etoolbox}
+\RequirePackage{graphicx}
+\RequirePackage{tikz}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 1. Lengths
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newlength{\PTmargin}        \setlength{\PTmargin}{1.05cm}
+\newlength{\PTrulethin}      \setlength{\PTrulethin}{0.5pt}
+\newlength{\PTrulethick}     \setlength{\PTrulethick}{1.7pt}
+\newlength{\PTaccentlen}     \setlength{\PTaccentlen}{0.95cm}
+\newlength{\PTprogressht}    \setlength{\PTprogressht}{1.6pt}
+
+% scratch registers used by the progress bar and the rules
+\newlength{\PT@pbdone}
+\newlength{\PT@pbtodo}
+\newlength{\PT@rw}
+\newlength{\PT@ra}
+\newlength{\PT@rb}
+\newlength{\PT@rc}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 1b. Theme state switches
+%%
+%% They live here (the first file loaded) so that every sub-theme can read them.
+%% \PTsetup{...} in the preamble is what normally flips them.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newif\ifPTeyebrow      \PTeyebrowtrue      % chapter line above the frame title
+\newif\ifPTinsection    \PTinsectionfalse   % set by \AtBeginSection
+\newif\ifPTfootline     \PTfootlinetrue     % textual footer
+\newif\ifPTprogressfoot \PTprogressfoottrue % progress bar at the bottom edge
+\newif\ifPTprogresshead \PTprogressheadfalse% progress bar at the top edge
+\newif\ifPTtocnumbers   \PTtocnumberstrue   % numbered entries in the outline
+\newif\ifPTsectionpage  \PTsectionpagetrue  % automatic chapter divider frames
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 2. Direction-safe wrappers (resolved at typesetting time)
+%%
+%%  \PTrl / \PTlr open an explicit right-to-left / left-to-right run.  They try
+%%  bidi's short forms first, then its \RLE / \LRE, and finally fall back to
+%%  doing nothing at all -- which is what makes the theme survive a plain LTR
+%%  test compilation without xepersian.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\PTrl}[1]{%
+  \@ifundefined{rl}{\@ifundefined{RLE}{#1}{\RLE{#1}}}{\rl{#1}}%
+}
+\newcommand{\PTlr}[1]{%
+  \@ifundefined{lr}{\@ifundefined{LRE}{#1}{\LRE{#1}}}{\lr{#1}}%
+}
+\newcommand{\PT@uselatinfont}{\@ifundefined{PTlatinfont}{}{\PTlatinfont}}
+
+% \begin{PTltr} ... \end{PTltr}
+%   A *paragraph-level* left-to-right block, for material that is genuinely
+%   Latin and several lines long -- a Latin bibliography, an address, a long
+%   command line.  Unlike \PTlr it does not build an unbreakable \hbox, so the
+%   lines still break and the block may even span a frame break.
+%   \PTrtl is the mirror image, needed only inside an outer LTR block.
+\newenvironment{PTltr}%
+  {\@ifundefined{LTR}{}{\begin{LTR}}}%
+  {\@ifundefined{LTR}{}{\end{LTR}}}
+\newenvironment{PTrtl}%
+  {\@ifundefined{RTL}{}{\begin{RTL}}}%
+  {\@ifundefined{RTL}{}{\end{RTL}}}
+
+% \en{...}  ->  a short left-to-right run typeset with the Latin font.
+\newcommand{\PTen}[1]{\PTlr{{\PT@uselatinfont #1}}}
+\newcommand{\en}[1]{\PTen{#1}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 3. Metadata fields
+%%
+%% \PT@declareinfo{foo} defines the user command \foo{...} and the reader
+%% \insertPTfoo (empty by default).  Beamer's own \title, \subtitle, \author,
+%% \date and \institute keep working and are reused by the templates.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\PT@declareinfo}[1]{%
+  \expandafter\gdef\csname insertPT#1\endcsname{}%
+  \expandafter\newcommand\csname #1\endcsname[1]{%
+    \expandafter\gdef\csname insertPT#1\endcsname{##1}}%
+}
+
+\PT@declareinfo{university}        % دانشگاه
+\PT@declareinfo{faculty}           % دانشکده
+\PT@declareinfo{department}        % گروه / رشته
+\PT@declareinfo{shortuniversity}   % نام کوتاه برای پانویس
+\PT@declareinfo{degree}            % کارشناسی / کارشناسی ارشد ...
+\PT@declareinfo{major}             % گرایش
+\PT@declareinfo{studentid}         % شماره دانشجویی
+\PT@declareinfo{supervisor}        % استاد راهنما
+\PT@declareinfo{supervisortwo}     % استاد راهنمای دوم
+\PT@declareinfo{advisor}           % استاد مشاور
+\PT@declareinfo{advisortwo}        % استاد مشاور دوم
+\PT@declareinfo{referee}           % استاد داور
+\PT@declareinfo{refereetwo}        % استاد داور دوم
+\PT@declareinfo{defenseplace}      % محل دفاع
+\PT@declareinfo{academicyear}      % سال تحصیلی
+\PT@declareinfo{latintitle}        % عنوان انگلیسی پایان‌نامه
+\PT@declareinfo{invocation}        % «بسم الله الرحمن الرحیم» یا خالی
+
+% Tests whether a metadata field is empty.
+\newcommand{\PTifempty}[3]{\ifdefempty{#1}{#2}{#3}}
+
+% Beamer spells the short forms \title[short]{long} and \author[short]{long}.
+% These two commands are the same thing written the way the rest of the metadata
+% is written; use them *after* \title / \author.
+\newcommand{\shorttitle}[1]{\gdef\insertshorttitle{#1}}
+\newcommand{\shortauthor}[1]{\gdef\insertshortauthor{#1}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 4. Localisable labels:  \PTsetlabel{key}{text} / \PTlabel{key}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\PTsetlabel}[2]{\@namedef{PTlabel@#1}{#2}}
+\newcommand{\PTlabel}[1]{%
+  \@ifundefined{PTlabel@#1}{\PackageWarning{persian-thesis-utils}{%
+      Unknown label `#1'}}{\@nameuse{PTlabel@#1}}%
+}
+
+% ---- default Persian wording (override any of these in config/info.tex) ----
+\PTsetlabel{thesisfor}    {پایان‌نامه برای دریافت درجهٔ}
+\PTsetlabel{projectfor}   {پروژهٔ پایانی دورهٔ}
+\PTsetlabel{supervisor}   {استاد راهنما}
+\PTsetlabel{supervisors}  {استادان راهنما}
+\PTsetlabel{advisor}      {استاد مشاور}
+\PTsetlabel{advisors}     {استادان مشاور}
+\PTsetlabel{referee}      {استاد داور}
+\PTsetlabel{referees}     {استادان داور}
+\PTsetlabel{presenter}    {ارائه‌دهنده}
+\PTsetlabel{student}      {نگارش}
+\PTsetlabel{studentid}    {شمارهٔ دانشجویی}
+\PTsetlabel{degree}       {مقطع}
+\PTsetlabel{major}        {گرایش}
+\PTsetlabel{date}         {تاریخ دفاع}
+\PTsetlabel{place}        {محل دفاع}
+\PTsetlabel{outline}      {فهرست مطالب}
+\PTsetlabel{references}   {مراجع}
+\PTsetlabel{chapter}      {فصل}
+\PTsetlabel{of}           {از}
+\PTsetlabel{thanks}       {از توجه شما سپاسگزارم}
+\PTsetlabel{questions}    {آمادهٔ پاسخ‌گویی به پرسش‌های شما هستم}
+\PTsetlabel{theend}       {پایان ارائه}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 5. Logos
+%%
+%% \PTlogofile{figures/logos/sharif.pdf}  — path *with* extension, relative to
+%% main.tex.  If the file is missing, a neutral vector emblem is drawn instead,
+%% so the template always compiles out of the box.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\gdef\PT@logofile{}
+\gdef\PT@logofiletwo{}
+\newcommand{\PTlogofile}[1]{\gdef\PT@logofile{#1}}
+\newcommand{\PTsecondlogofile}[1]{\gdef\PT@logofiletwo{#1}}
+
+\newcommand{\PT@drawlogo}[2]{% #1 = file, #2 = height
+  \IfFileExists{#1}{\includegraphics[height=#2,keepaspectratio]{#1}}%
+                   {\PTemblem{#2}}%
+}
+\newcommand{\PTinsertlogo}[1][1.85cm]{%
+  \PTifempty{\PT@logofile}{\PTemblem{#1}}{\PT@drawlogo{\PT@logofile}{#1}}%
+}
+\newcommand{\PTinsertsecondlogo}[1][1.85cm]{%
+  \PTifempty{\PT@logofiletwo}{}{\PT@drawlogo{\PT@logofiletwo}{#1}}%
+}
+
+% Neutral fallback emblem (no external file needed).  #1 = height.
+\newcommand{\PTemblem}[1]{%
+  \resizebox{!}{#1}{%
+    \begin{tikzpicture}[line join=round,line cap=round,x=1mm,y=1mm]
+      \useasboundingbox (-11,-11) rectangle (11,11);
+      \draw[PTprimary,line width=1.1pt] (0,0) circle (10.2);
+      \draw[PTprimary!30,line width=0.5pt] (0,0) circle (8.6);
+      % open book
+      \fill[PTprimary!85] (-5.6,-1.9) -- (0,-0.5) -- (5.6,-1.9)
+                       -- (5.6,-5.0) -- (0,-3.6) -- (-5.6,-5.0) -- cycle;
+      \draw[PTpaper,line width=0.4pt] (0,-0.6) -- (0,-3.7);
+      % graduation cap
+      \fill[PTaccent] (0,5.4) -- (6.0,2.5) -- (0,-0.4) -- (-6.0,2.5) -- cycle;
+      \draw[PTaccent,line width=0.7pt] (4.2,3.5) -- (4.2,0.7);
+      \fill[PTaccent] (4.2,0.6) circle (0.75);
+    \end{tikzpicture}%
+  }%
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 6. Decorative primitives
+%%
+%% These are drawn with TikZ on purpose.  A TikZ picture has *physical*
+%% coordinates, so the accent stub and the filled part of the progress bar sit
+%% on the right-hand side no matter how the surrounding paragraph direction is
+%% resolved.  Both macros return a single \hbox, never a paragraph, so they are
+%% safe inside beamer head/foot templates.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% \PTtitlerule{<width>}
+%   A hairline whose right-hand end carries a thicker accent stub.
+\newcommand{\PTtitlerule}[1]{%
+  \begingroup
+  \PT@rw=#1\relax
+  \PT@ra=\dimexpr.5\PTrulethick-.5\PTrulethin\relax   % hairline bottom
+  \PT@rb=\dimexpr.5\PTrulethick+.5\PTrulethin\relax   % hairline top
+  \PT@rc=\dimexpr\PT@rw-\PTaccentlen\relax            % stub start
+  \ifdim\PT@rc<\z@ \PT@rc=\z@ \fi
+  \nointerlineskip
+  \hbox{%
+    \begin{tikzpicture}
+      \useasboundingbox (0pt,0pt) rectangle (\the\PT@rw,\the\PTrulethick);
+      \fill[PTline]   (0pt,\the\PT@ra) rectangle (\the\PT@rw,\the\PT@rb);
+      \fill[PTaccent] (\the\PT@rc,0pt) rectangle (\the\PT@rw,\the\PTrulethick);
+    \end{tikzpicture}%
+  }%
+  \endgroup
+}
+
+% \PThairline[<width>] : a plain hairline (direction-neutral, so a rule is fine).
+\newcommand{\PThairline}[1][\linewidth]{%
+  {\color{PTline}\rule{#1}{\PTrulethin}}%
+}
+
+% \PTaccentstub[<width>] : a short accent dash, used centred on divider frames.
+\newcommand{\PTaccentstub}[1][1.5cm]{%
+  {\color{PTaccent}\rule{#1}{\PTrulethick}}%
+}
+
+% \PTprogressbar{<height>}
+%   Full-width bar; the elapsed part grows from the right edge, i.e. it follows
+%   the reading direction of the presentation.
+\newcommand{\PTprogressbar}[1]{%
+  \begingroup
+  \PT@pbdone=\z@
+  \@ifundefined{inserttotalframenumber}{}{%
+    \ifnum\inserttotalframenumber>\z@
+      \PT@pbdone=\dimexpr\paperwidth/\inserttotalframenumber*\insertframenumber\relax
+    \fi}%
+  \ifdim\PT@pbdone>\paperwidth \PT@pbdone=\paperwidth \fi
+  \ifdim\PT@pbdone<\z@ \PT@pbdone=\z@ \fi
+  \PT@pbtodo=\dimexpr\paperwidth-\PT@pbdone\relax
+  \PT@rw=#1\relax
+  \usebeamercolor{progress bar}%
+  \nointerlineskip
+  \hbox{%
+    \begin{tikzpicture}
+      \useasboundingbox (0pt,0pt) rectangle (\the\paperwidth,\the\PT@rw);
+      \fill[bg] (0pt,0pt)            rectangle (\the\paperwidth,\the\PT@rw);
+      \fill[fg] (\the\PT@pbtodo,0pt) rectangle (\the\paperwidth,\the\PT@rw);
+    \end{tikzpicture}%
+  }%
+  \endgroup
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 7. Small text helpers available in the slides
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \hl{...}     strong inline highlight (accent colour, bold)
+% \soft{...}   de-emphasised inline text
+% \term{...}   a technical term (primary colour, semibold)
+% \PTsep       a thin bullet used as an inline separator
+\newcommand{\hl}[1]{{\usebeamerfont*{PT highlight}\color{PTaccentdark}#1}}
+\newcommand{\soft}[1]{{\color{PTmuted}#1}}
+\newcommand{\term}[1]{{\usebeamerfont*{PT term}\color{PTprimary}#1}}
+\newcommand{\PTsep}{\,{\color{PTline}\rule[.28ex]{.42em}{.42em}}\,}
+
+\endinput

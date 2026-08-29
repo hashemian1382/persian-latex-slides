@@ -1,0 +1,114 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%  config/fonts.tex
+%%  Fonts and Persian typesetting.  **This file must be the last thing loaded in
+%%  the preamble**, because xepersian (and the bidi package behind it) has to be
+%%  the last package of the document.
+%%
+%%  The bundled family is Vazirmatn by Saber Rastikerdar (SIL OFL 1.1), in
+%%  fonts/Vazirmatn/.  It covers Persian *and* Latin, so one family carries the
+%%  whole deck and mixed Persian/English lines stay optically consistent.
+%%
+%%  Paths are relative to the directory you compile from, i.e. the folder that
+%%  holds main.tex.  To use another family, change the four \...font commands
+%%  below and nothing else -- the theme never refers to a concrete font file.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Proper Computer Modern maths (Vazirmatn has no maths glyphs).  Loaded *before*
+% xepersian on purpose: no package may come after it.
+\usefonttheme[onlymath]{serif}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% xepersian -- the last package in the preamble
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{xepersian}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Main Persian font
+%%
+%%  Mapping=parsidigits turns every ASCII digit of the Persian text into a
+%%  Persian one, so slide numbers, chapter numbers and outline numbers come out
+%%  as ۱ ۲ ۳ without any extra markup.
+%%  Persian has no italics; the italic slot is mapped to the Medium weight, which
+%%  gives \emph{...} a gentle emphasis instead of a fake slant.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\settextfont[
+  Path            = fonts/Vazirmatn/,
+  Extension       = .ttf,
+  UprightFont     = *-Regular,
+  BoldFont        = *-Bold,
+  ItalicFont      = *-Medium,
+  BoldItalicFont  = *-ExtraBold,
+  Mapping         = parsidigits,
+  Scale           = 1.0,
+]{Vazirmatn}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Latin font
+%%
+%%  Same family, but *without* parsidigits: English runs keep Latin digits, so
+%%  "Precision@3" or "GPT-4" look the way they should.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setlatintextfont[
+  Path            = fonts/Vazirmatn/,
+  Extension       = .ttf,
+  UprightFont     = *-Regular,
+  BoldFont        = *-Bold,
+  ItalicFont      = *-Medium,
+  BoldItalicFont  = *-ExtraBold,
+  Ligatures       = TeX,
+  Scale           = 1.0,
+]{Vazirmatn}
+
+% The family \en{...} switches to.  Keep it in sync with \setlatintextfont.
+\newfontfamily\PTlatinfont[
+  Path            = fonts/Vazirmatn/,
+  Extension       = .ttf,
+  UprightFont     = *-Regular,
+  BoldFont        = *-Bold,
+  ItalicFont      = *-Medium,
+  BoldItalicFont  = *-ExtraBold,
+  Ligatures       = TeX,
+]{Vazirmatn}
+
+% A true semibold, used for \hl{...} and \term{...} instead of a heavy bold.
+%
+%  Script=Arabic is not optional here.  \settextfont / \setlatintextfont get the
+%  Persian defaults from xepersian, but a hand-rolled \newfontfamily does not:
+%  without an explicit Arabic script the shaping features never fire and the
+%  letters come out unjoined.
+\newfontfamily\PTsemibold[
+  Path            = fonts/Vazirmatn/,
+  Extension       = .ttf,
+  Script          = Arabic,
+  UprightFont     = *-SemiBold,
+  BoldFont        = *-Bold,
+  ItalicFont      = *-SemiBold,
+  BoldItalicFont  = *-Bold,
+  Mapping         = parsidigits,
+]{Vazirmatn}
+
+% A light weight for very large display text, should you want it.
+\newfontfamily\PTlight[
+  Path            = fonts/Vazirmatn/,
+  Extension       = .ttf,
+  Script          = Arabic,
+  UprightFont     = *-Light,
+  BoldFont        = *-Medium,
+  ItalicFont      = *-Light,
+  BoldItalicFont  = *-Medium,
+  Mapping         = parsidigits,
+]{Vazirmatn}
+
+% Monospace for the PTcode environment.  Left at the LaTeX default (Latin
+% Modern Mono), which every distribution has.  Uncomment to upgrade:
+%\setlatinmonofont[Scale=MatchLowercase]{DejaVu Sans Mono}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Weight tuning for the theme's inline helpers
+%%
+%%  Now that a real SemiBold exists, \hl{...} and \term{...} can use it: on a
+%%  projector a semibold Persian word reads as emphasis, a bold one reads as
+%%  shouting.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setbeamerfont{PT highlight}{family=\PTsemibold,series=\mdseries}
+\setbeamerfont{PT term}     {family=\PTsemibold,series=\mdseries}

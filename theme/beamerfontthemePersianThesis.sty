@@ -1,0 +1,66 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%  beamerfontthemePersianThesis.sty
+%%  Only *sizes*, *series* and *shapes*.  The actual font families are chosen in
+%%  config/fonts.tex through xepersian (\settextfont, \setlatintextfont, ...),
+%%  which keeps the theme usable with any Persian font.
+%%
+%%  Sizes are tuned for  \documentclass[11pt,aspectratio=169]{beamer}
+%%  (paper 16cm x 9cm).  If you switch to 4:3 or another base size, scale the
+%%  numbers here rather than fighting them slide by slide.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{beamerfontthemePersianThesis}[2026/08/29 v1.0 Persian thesis font theme]
+
+\mode<presentation>
+
+% ---- title page -----------------------------------------------------------
+\setbeamerfont{PT invocation}   {size*={9.5}{12}}
+\setbeamerfont{institute}       {size*={10}{13}}
+\setbeamerfont{PT faculty}      {size*={9}{12}}
+\setbeamerfont{title}           {size*={20}{24},series=\bfseries}
+\setbeamerfont{subtitle}        {size*={12}{15},series=\mdseries}
+\setbeamerfont{PT latin title}  {size*={10}{13},shape=\itshape}
+\setbeamerfont{PT info label}   {size*={8.2}{10}}
+\setbeamerfont{PT info value}   {size*={10.5}{13},series=\bfseries}
+\setbeamerfont{date}            {size*={9.5}{12}}
+\setbeamerfont{author}          {size*={11}{14},series=\bfseries}
+
+% ---- frames ---------------------------------------------------------------
+\setbeamerfont{PT eyebrow}      {size*={8.2}{10}}
+\setbeamerfont{frametitle}      {size*={15}{18},series=\bfseries}
+\setbeamerfont{framesubtitle}   {size*={9.8}{12.5},series=\mdseries}
+
+% ---- footline -------------------------------------------------------------
+\setbeamerfont{footline}        {size*={7.6}{9}}
+\setbeamerfont{footline emph}   {size*={7.6}{9},series=\bfseries}
+
+% ---- section pages and table of contents ----------------------------------
+\setbeamerfont{PT chapter label}{size*={9}{11}}
+\setbeamerfont{section number}  {size*={22}{22},series=\bfseries}
+\setbeamerfont{section title}   {size*={18}{22},series=\bfseries}
+\setbeamerfont{PT toc number}   {size*={9.5}{12},series=\bfseries}
+\setbeamerfont{section in toc}  {size*={12.5}{17},series=\bfseries}
+\setbeamerfont{subsection in toc}{size*={10.5}{14}}
+
+% ---- body -----------------------------------------------------------------
+\setbeamerfont{block title}     {size*={11}{13.5},series=\bfseries}
+\setbeamerfont{block body}      {}
+\setbeamerfont{caption}         {size*={8.8}{11}}
+\setbeamerfont{caption name}    {size*={8.8}{11},series=\bfseries}
+\setbeamerfont{footnote}        {size*={7.6}{9.5}}
+\setbeamerfont{bibliography entry author}{size*={9}{12}}
+\setbeamerfont{bibliography entry title} {size*={9}{12},series=\bfseries}
+\setbeamerfont{bibliography entry location}{size*={8.4}{11}}
+\setbeamerfont{bibliography entry note}  {size*={8.4}{11}}
+
+% ---- inline helpers used by \hl{} and \term{} ------------------------------
+% config/fonts.tex may upgrade these to a real semibold family.
+\setbeamerfont{PT highlight}    {series=\bfseries}
+\setbeamerfont{PT term}         {series=\bfseries}
+
+% ---- closing frame --------------------------------------------------------
+\setbeamerfont{PT thanks}       {size*={24}{28},series=\bfseries}
+\setbeamerfont{PT thanks sub}   {size*={11.5}{15}}
+
+\mode<all>
+\endinput

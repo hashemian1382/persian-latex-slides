@@ -1,0 +1,92 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%  content/07-references.tex — مراجع
+%%
+%%  چرا thebibliography دستی و نه biblatex؟
+%%  برای اینکه قالب با یک بار اجرای xelatex هم کامل در بیاید و به bibtex/biber
+%%  نیازی نداشته باشد.  اگر biblatex می‌خواهید، همین قاب را با \printbibliography
+%%  جایگزین کنید و در main.tex این دو خط را پیش از config/fonts.tex بیفزایید:
+%%
+%%      \usepackage[backend=biber,style=numeric-comp,sorting=none]{biblatex}
+%%      \addbibresource{refs/references.bib}
+%%
+%%  فهرست انگلیسی در محیط PTltr پیچیده شده است: یک بلوکِ چپ‌به‌راستِ بندیْ که
+%%  خطهایش می‌شکنند و می‌تواند از یک اسلاید به اسلاید بعد سرریز کند.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[allowframebreaks]{\PTlabel{references}}
+  \begin{PTltr}
+    \scriptsize
+    \begin{thebibliography}{99}
+
+      \bibitem{lewis2020rag}
+      P.~Lewis \textit{et al.}, ``Retrieval-Augmented Generation for
+      Knowledge-Intensive NLP Tasks,'' in \textit{Advances in Neural Information
+      Processing Systems (NeurIPS)}, 2020.
+
+      \bibitem{karpukhin2020dpr}
+      V.~Karpukhin \textit{et al.}, ``Dense Passage Retrieval for Open-Domain
+      Question Answering,'' in \textit{Proc. EMNLP}, 2020, pp.~6769--6781.
+
+      \bibitem{gao2024ragsurvey}
+      Y.~Gao \textit{et al.}, ``Retrieval-Augmented Generation for Large Language
+      Models: A Survey,'' \textit{arXiv:2312.10997}, 2024.
+
+      \bibitem{vaswani2017}
+      A.~Vaswani \textit{et al.}, ``Attention Is All You Need,'' in
+      \textit{Advances in Neural Information Processing Systems (NeurIPS)}, 2017.
+
+      \bibitem{devlin2019bert}
+      J.~Devlin, M.-W.~Chang, K.~Lee, and K.~Toutanova, ``BERT: Pre-training of
+      Deep Bidirectional Transformers for Language Understanding,'' in
+      \textit{Proc. NAACL-HLT}, 2019, pp.~4171--4186.
+
+      \bibitem{reimers2019sbert}
+      N.~Reimers and I.~Gurevych, ``Sentence-BERT: Sentence Embeddings using
+      Siamese BERT-Networks,'' in \textit{Proc. EMNLP-IJCNLP}, 2019.
+
+      \bibitem{robertson2009bm25}
+      S.~Robertson and H.~Zaragoza, ``The Probabilistic Relevance Framework:
+      BM25 and Beyond,'' \textit{Foundations and Trends in Information
+      Retrieval}, vol.~3, no.~4, pp.~333--389, 2009.
+
+      \bibitem{nogueira2019passage}
+      R.~Nogueira and K.~Cho, ``Passage Re-ranking with BERT,''
+      \textit{arXiv:1901.04085}, 2019.
+
+      \bibitem{khattab2020colbert}
+      O.~Khattab and M.~Zaharia, ``ColBERT: Efficient and Effective Passage
+      Search via Contextualized Late Interaction over BERT,'' in
+      \textit{Proc. SIGIR}, 2020, pp.~39--48.
+
+      \framebreak
+
+      \bibitem{izacard2021fid}
+      G.~Izacard and E.~Grave, ``Leveraging Passage Retrieval with Generative
+      Models for Open Domain Question Answering,'' in \textit{Proc. EACL}, 2021,
+      pp.~874--880.
+
+      \bibitem{yao2023react}
+      S.~Yao \textit{et al.}, ``ReAct: Synergizing Reasoning and Acting in
+      Language Models,'' in \textit{Proc. ICLR}, 2023.
+
+      \bibitem{nakano2021webgpt}
+      R.~Nakano \textit{et al.}, ``WebGPT: Browser-assisted Question-answering
+      with Human Feedback,'' \textit{arXiv:2112.09332}, 2021.
+
+      \bibitem{asai2024selfrag}
+      A.~Asai, Z.~Wu, Y.~Wang, A.~Sil, and H.~Hajishirzi, ``Self-RAG: Learning
+      to Retrieve, Generate, and Critique through Self-Reflection,'' in
+      \textit{Proc. ICLR}, 2024.
+
+      \bibitem{es2024ragas}
+      S.~Es, J.~James, L.~Espinosa-Anke, and S.~Schockaert, ``RAGAS: Automated
+      Evaluation of Retrieval Augmented Generation,'' in \textit{Proc. EACL:
+      System Demonstrations}, 2024, pp.~150--158.
+
+      \bibitem{jarvelin2002ndcg}
+      K.~J\"arvelin and J.~Kek\"al\"ainen, ``Cumulated Gain-based Evaluation of
+      IR Techniques,'' \textit{ACM Transactions on Information Systems},
+      vol.~20, no.~4, pp.~422--446, 2002.
+
+    \end{thebibliography}
+  \end{PTltr}
+\end{frame}

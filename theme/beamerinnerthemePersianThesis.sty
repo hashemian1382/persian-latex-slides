@@ -1,0 +1,323 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%  beamerinnerthemePersianThesis.sty
+%%  Title page, chapter divider, lists, blocks, table of contents, captions,
+%%  bibliography and the ready-made title / outline / closing frames.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{beamerinnerthemePersianThesis}[2026/08/29 v1.0 Persian thesis inner theme]
+
+\mode<presentation>
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 1. Building blocks for the title page
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% A small "label over value" card.  Everything inside is centred, therefore the
+% cell renders identically whatever the resolved paragraph direction is.
+\newcommand{\PTinfocell}[3]{% #1 = width, #2 = label, #3 = value
+  \parbox[t]{#1}{\centering
+    {\usebeamerfont{PT info label}\usebeamercolor[fg]{PT info label}#2\par}%
+    \vskip.30ex
+    {\usebeamerfont{PT info value}\usebeamercolor[fg]{PT info value}#3\par}%
+  }%
+}
+
+% One or two cards on a row, horizontally centred.
+\newcommand{\PTinforow}[2]{%
+  \leavevmode\hbox{#1\hskip.045\paperwidth#2}\par
+}
+
+\newcommand{\PT@degreeline}{%
+  \PTifempty{\insertPTdegree}{}{%
+    \PTlabel{thesisfor}\ \insertPTdegree
+    \PTifempty{\insertPTmajor}{}{\ \insertPTmajor}%
+  }%
+}
+
+\newcommand{\PT@facultyline}{%
+  \PTifempty{\insertPTfaculty}{}{\insertPTfaculty}%
+  \PTifempty{\insertPTdepartment}{}{%
+    \PTifempty{\insertPTfaculty}{}{\PTsep}\insertPTdepartment}%
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 2. Title page
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setbeamertemplate{title page}{%
+  {\centering
+    \PTifempty{\insertPTinvocation}{}{%
+      {\usebeamerfont{PT invocation}\usebeamercolor[fg]{PT invocation}%
+       \insertPTinvocation\par}%
+      \vskip.14cm}%
+    \PTinsertlogo[1.30cm]\par
+    \vskip.16cm
+    {\usebeamerfont{institute}\usebeamercolor[fg]{institute}%
+     \insertPTuniversity\par}%
+    {\usebeamerfont{PT faculty}\usebeamercolor[fg]{institute}%
+     \PT@facultyline\par}%
+    \vskip.30cm
+    \PTaccentstub[1.35cm]\par
+    \vskip.26cm
+    {\usebeamerfont{PT info label}\usebeamercolor[fg]{PT info label}%
+     \PT@degreeline\par}%
+    \vskip.16cm
+    {\usebeamerfont{title}\usebeamercolor[fg]{title}\inserttitle\par}%
+    \PTifempty{\insertPTlatintitle}{}{%
+      \vskip.10cm
+      {\usebeamerfont{PT latin title}\usebeamercolor[fg]{PT latin title}%
+       \en{\insertPTlatintitle}\par}}%
+    \ifx\insertsubtitle\@empty\else
+      \vskip.10cm
+      {\usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\insertsubtitle\par}%
+    \fi
+    \vskip.30cm
+    \PThairline[.62\paperwidth]\par
+    \vskip.30cm
+    \PT@titlepeople
+    \vskip.26cm
+    {\usebeamerfont{date}\usebeamercolor[fg]{date}%
+     \insertdate
+     \PTifempty{\insertPTdefenseplace}{}{\PTsep\insertPTdefenseplace}\par}%
+    \par}%
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 3. The "people" block of the title page
+%%
+%%  supervisor(s)      advisor(s)
+%%          referee(s)            (only if \referee{} was given)
+%%            نگارش
+%%
+%% Every cell disappears silently when its metadata field was left empty, so a
+%% bachelor project with a single supervisor produces a clean, balanced page.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\PT@pair}[2]{#1\PTifempty{#2}{}{\par#2}}
+\newcommand{\PT@onecell}[1]{\leavevmode\hbox{#1}\par}
+
+\newcommand{\PT@supervisorcell}{%
+  \PTinfocell{.31\paperwidth}%
+    {\PTifempty{\insertPTsupervisortwo}{\PTlabel{supervisor}}{\PTlabel{supervisors}}}%
+    {\PT@pair{\insertPTsupervisor}{\insertPTsupervisortwo}}%
+}
+\newcommand{\PT@advisorcell}{%
+  \PTinfocell{.31\paperwidth}%
+    {\PTifempty{\insertPTadvisortwo}{\PTlabel{advisor}}{\PTlabel{advisors}}}%
+    {\PT@pair{\insertPTadvisor}{\insertPTadvisortwo}}%
+}
+\newcommand{\PT@refereecell}{%
+  \PTinfocell{.46\paperwidth}%
+    {\PTifempty{\insertPTrefereetwo}{\PTlabel{referee}}{\PTlabel{referees}}}%
+    {\PT@pair{\insertPTreferee}{\insertPTrefereetwo}}%
+}
+\newcommand{\PT@studentcell}{%
+  \PTinfocell{.46\paperwidth}{\PTlabel{student}}%
+    {\insertauthor
+     \PTifempty{\insertPTstudentid}{}{%
+       \par\vskip.15ex
+       {\usebeamerfont{PT info label}\usebeamercolor[fg]{PT info label}%
+        \PTlabel{studentid}: \insertPTstudentid}}}%
+}
+
+\newcommand{\PT@titlepeople}{%
+  \PTifempty{\insertPTsupervisor}{%
+    \PTifempty{\insertPTadvisor}{}{\PT@onecell{\PT@advisorcell}\vskip.24cm}%
+  }{%
+    \PTifempty{\insertPTadvisor}%
+      {\PT@onecell{\PT@supervisorcell}\vskip.24cm}%
+      {\PTinforow{\PT@supervisorcell}{\PT@advisorcell}\vskip.24cm}%
+  }%
+  \PTifempty{\insertPTreferee}{}{\PT@onecell{\PT@refereecell}\vskip.24cm}%
+  \PT@onecell{\PT@studentcell}%
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 4. Chapter divider  ("section page")
+%%
+%%        ( ۲ )        <- number inside a soft disc
+%%         فصل
+%%      مبانی نظری
+%%         ▬▬▬
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newlength{\PTbadgerad}  \setlength{\PTbadgerad}{0.80cm}
+
+\newcommand{\PT@sectionbadge}{%
+  \begin{tikzpicture}
+    \fill[PTaccentsoft] (0,0) circle (\the\PTbadgerad);
+    \draw[PTaccent!60,line width=1.0pt] (0,0) circle (\the\PTbadgerad);
+    \node[inner sep=0pt,outer sep=0pt,anchor=center] at (0,0)
+      {\usebeamerfont{section number}\usebeamercolor[fg]{section number}%
+       \insertsectionnumber};
+  \end{tikzpicture}%
+}
+
+\setbeamertemplate{section page}{%
+  {\centering
+    \vfill
+    \PT@sectionbadge\par
+    \vskip.42cm
+    {\usebeamerfont{PT chapter label}\usebeamercolor[fg]{PT eyebrow}%
+     \PTlabel{chapter}\par}%
+    \vskip.08cm
+    {\usebeamerfont{section title}\usebeamercolor[fg]{section title}%
+     \insertsection\par}%
+    \vskip.36cm
+    \PTaccentstub[1.60cm]\par
+    \vfill
+    \par}%
+}
+
+% Same idea, one level down.  Rarely used, but beamer asks for the template as
+% soon as somebody writes \subsection, so it must exist.
+\setbeamertemplate{subsection page}{%
+  {\centering
+    \vfill
+    {\usebeamerfont{PT chapter label}\usebeamercolor[fg]{PT eyebrow}%
+     \insertsection\par}%
+    \vskip.14cm
+    {\usebeamerfont{section title}\usebeamercolor[fg]{section title}%
+     \insertsubsection\par}%
+    \vskip.34cm
+    \PTaccentstub[1.40cm]\par
+    \vfill
+    \par}%
+}
+
+% \ifPTinsection is what makes the eyebrow appear above the frame titles; it has
+% to survive the group beamer may wrap the hook in, hence the explicit \global.
+\newcommand{\PT@insectiontrue}{\global\let\ifPTinsection\iftrue}
+
+\AtBeginSection[]{%
+  \PT@insectiontrue
+  \ifPTsectionpage
+    \begin{frame}[plain,noframenumbering]
+      \usebeamertemplate*{section page}%
+    \end{frame}%
+  \fi
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 5. Lists
+%%
+%%  A filled square, then a dash, then a small square.  Rules are geometric
+%%  objects, so they need no bidi treatment at all -- beamer inserts the marker
+%%  on the correct side of the item by itself.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setbeamertemplate{itemize item}{%
+  {\usebeamercolor[fg]{itemize item}\rule[.30ex]{.44em}{.44em}}%
+}
+\setbeamertemplate{itemize subitem}{%
+  {\usebeamercolor[fg]{itemize subitem}\rule[.50ex]{.50em}{.10em}}%
+}
+\setbeamertemplate{itemize subsubitem}{%
+  {\usebeamercolor[fg]{itemize subsubitem}\rule[.34ex]{.26em}{.26em}}%
+}
+
+\setbeamertemplate{enumerate item}{%
+  {\usebeamerfont*{PT term}\usebeamercolor[fg]{enumerate item}\insertenumlabel.}%
+}
+\setbeamertemplate{enumerate subitem}{%
+  {\usebeamercolor[fg]{enumerate subitem}\insertsubenumlabel.}%
+}
+\setbeamertemplate{enumerate subsubitem}{%
+  {\usebeamercolor[fg]{enumerate subsubitem}\insertsubsubenumlabel.}%
+}
+\setbeamertemplate{description item}{%
+  {\usebeamerfont*{PT term}\usebeamercolor[fg]{description item}%
+   \insertdescriptionitem}%
+}
+
+% A little air between items; the sub-lists stay tighter on purpose.
+\setbeamertemplate{itemize/enumerate body begin}{%
+  \setlength{\itemsep}{0.62ex}\setlength{\parsep}{0pt}%
+}
+\setbeamertemplate{itemize/enumerate subbody begin}{%
+  \setlength{\itemsep}{0.34ex}\setlength{\parsep}{0pt}%
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 6. Blocks
+%%
+%%  Square, shadow-free blocks: the same silhouette as the tcolorbox flavours in
+%%  persian-thesis-boxes.sty, so a slide that mixes both still looks designed.
+%%  The colours defined in the colour theme carry the whole visual identity.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setbeamertemplate{blocks}[default]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 7. Table of contents
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setbeamertemplate{section in toc}{%
+  \leavevmode
+  \ifPTtocnumbers
+    {\usebeamerfont{PT toc number}\usebeamercolor[fg]{PT toc number}%
+     \inserttocsectionnumber.}\enspace
+  \fi
+  {\usebeamerfont{section in toc}\inserttocsection}%
+}
+
+\setbeamertemplate{subsection in toc}{%
+  \leavevmode\hskip1.35em
+  {\usebeamercolor[fg]{subsection in toc}\rule[.42ex]{.40em}{.09em}}\hskip.5em
+  {\usebeamerfont{subsection in toc}\inserttocsubsection}%
+}
+
+% \PTtoc[<beamer toc options>] -- the outline, with generous line spacing.
+\newcommand{\PTtoc}[1][hideallsubsections]{%
+  \begingroup
+  \setlength{\parskip}{0.70ex}%
+  \tableofcontents[#1]%
+  \endgroup
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 8. Captions, footnotes, bibliography
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamertemplate{bibliography item}[text]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 9. Ready-made frames
+%%
+%%  \PTtitleframe      the cover slide
+%%  \PToutlineframe    "فهرست مطالب"
+%%  \PTclosingframe    the thank-you slide
+%%
+%%  All three are plain frames excluded from the numbering, so the progress bar
+%%  and the "n از m" counter describe the *body* of the talk only.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\PTtitleframe}{%
+  \begin{frame}[plain,noframenumbering]
+    \titlepage
+  \end{frame}%
+}
+
+\newcommand{\PToutlineframe}[1][hideallsubsections]{%
+  \begin{frame}{\PTlabel{outline}}
+    \vskip.10cm
+    \PTtoc[#1]%
+  \end{frame}%
+}
+
+\newcommand{\PTclosingframe}{%
+  \begin{frame}[plain,noframenumbering]
+    {\centering
+      \vfill
+      {\usebeamerfont{PT thanks}\usebeamercolor[fg]{title}%
+       \PTlabel{thanks}\par}%
+      \vskip.44cm
+      \PTaccentstub[2.10cm]\par
+      \vskip.44cm
+      {\usebeamerfont{PT thanks sub}\usebeamercolor[fg]{PT info label}%
+       \PTlabel{questions}\par}%
+      \vfill
+      {\usebeamerfont{footline}\usebeamercolor[fg]{footline}%
+       \insertauthor
+       \PTifempty{\insertPTshortuniversity}%
+         {\PTifempty{\insertPTuniversity}{}{\PTsep\insertPTuniversity}}%
+         {\PTsep\insertPTshortuniversity}\par}%
+      \par}%
+  \end{frame}%
+}
+
+\mode<all>
+\endinput

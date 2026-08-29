@@ -1,0 +1,197 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%  persian-thesis-boxes.sty
+%%  Ready-made coloured boxes for the slides, plus an LTR code-listing
+%%  environment.
+%%
+%%      \begin{PTdef}            ... \end{PTdef}        تعریف
+%%      \begin{PTdef}[RAG]       ... \end{PTdef}        تعریف: RAG
+%%      \begin{PTthm}[قضیه بیز]  ... \end{PTthm}        قضیه
+%%      \begin{PTnote}           ... \end{PTnote}       نکته
+%%      \begin{PTpros}           ... \end{PTpros}       مزایا
+%%      \begin{PTcons}           ... \end{PTcons}       چالش‌ها
+%%      \begin{PTresult}         ... \end{PTresult}     نتیجه
+%%      \begin{PTexample}        ... \end{PTexample}    مثال
+%%      \begin{PTcallout}        ... \end{PTcallout}    (no title)
+%%      \begin{PTcode}[language=Python] ... \end{PTcode}
+%%
+%%  Every box is a tcolorbox with a straight accent bar on its *right* edge --
+%%  the side a Persian reader starts from.  "east" in tcolorbox means physical
+%%  east, so the bar stays there regardless of the surrounding text direction.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{persian-thesis-boxes}[2026/08/29 v1.0 Persian thesis boxes]
+
+\RequirePackage{etoolbox}
+\RequirePackage{tcolorbox}
+\tcbuselibrary{skins}
+\RequirePackage{listings}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 1. Titles (override them in config/info.tex with \PTsetlabel)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\PTsetlabel{definition}{تعریف}
+\PTsetlabel{theorem}   {قضیه}
+\PTsetlabel{note}      {نکته}
+\PTsetlabel{pros}      {مزایا}
+\PTsetlabel{cons}      {چالش‌ها}
+\PTsetlabel{result}    {نتیجه}
+\PTsetlabel{example}   {مثال}
+
+% "تعریف" or "تعریف: <extra>"
+\newcommand{\PT@boxtitle}[2]{#1\ifblank{#2}{}{: #2}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 2. Styles
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\tcbset{
+  PT@base/.style={
+    enhanced jigsaw,
+    sharp corners,
+    boxrule = 0pt,
+    frame hidden,
+    boxsep  = 0pt,
+    left    = 2.9mm,
+    right   = 2.9mm,
+    top     = 2.0mm,
+    bottom  = 2.0mm,
+    toptitle    = 1.5mm,
+    bottomtitle = 1.5mm,
+    before skip = 1.7ex,
+    after skip  = 1.7ex,
+    fontupper = \usebeamerfont{block body},
+    fonttitle = \usebeamerfont{block title},
+    coltitle  = PTpaper,
+    colupper  = PTink,
+  },
+  % #1 = bar / title colour, #2 = body colour
+  PT@flavour/.style 2 args={
+    PT@base,
+    colbacktitle = #1,
+    colback      = #2,
+    borderline east = {1.9pt}{0pt}{#1},
+  },
+  PT@primary/.style   = {PT@flavour={PTprimary}{PTprimarysoft}},
+  PT@secondary/.style = {PT@flavour={PTsecondary}{PTsurface}},
+  PT@accent/.style    = {PT@flavour={PTaccentdark}{PTaccentsoft}},
+  PT@success/.style   = {PT@flavour={PTsuccess}{PTsuccess!7!PTpaper}},
+  PT@danger/.style    = {PT@flavour={PTdanger}{PTdanger!7!PTpaper}},
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 3. The boxes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newtcolorbox{PTdef}[1][]{%
+  PT@primary,   title={\PT@boxtitle{\PTlabel{definition}}{#1}}}
+\newtcolorbox{PTthm}[1][]{%
+  PT@primary,   title={\PT@boxtitle{\PTlabel{theorem}}{#1}}}
+\newtcolorbox{PTnote}[1][]{%
+  PT@accent,    title={\PT@boxtitle{\PTlabel{note}}{#1}}}
+\newtcolorbox{PTpros}[1][]{%
+  PT@success,   title={\PT@boxtitle{\PTlabel{pros}}{#1}}}
+\newtcolorbox{PTcons}[1][]{%
+  PT@danger,    title={\PT@boxtitle{\PTlabel{cons}}{#1}}}
+\newtcolorbox{PTresult}[1][]{%
+  PT@accent,    title={\PT@boxtitle{\PTlabel{result}}{#1}}}
+\newtcolorbox{PTexample}[1][]{%
+  PT@secondary, title={\PT@boxtitle{\PTlabel{example}}{#1}}}
+
+% Untitled callout: only the accent bar and a soft background.
+\newtcolorbox{PTcallout}[1][]{%
+  PT@base,
+  colback = PTsurface,
+  borderline east = {1.9pt}{0pt}{PTaccentdark},
+  #1}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 4. Code listings
+%%
+%%  Source code is always left-to-right.  \PT@beginLTR / \PT@endLTR open and
+%%  close bidi's LTR environment when bidi is present, and do nothing at all in
+%%  a plain LTR test compilation.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\PT@beginLTR}{\@ifundefined{LTR}{}{\begin{LTR}}}
+\newcommand{\PT@endLTR}{\@ifundefined{LTR}{}{\end{LTR}}}
+
+\lstdefinestyle{PTcodestyle}{
+  basicstyle       = \ttfamily\footnotesize,
+  keywordstyle     = \color{PTprimary}\bfseries,
+  commentstyle     = \color{PTmuted}\itshape,
+  stringstyle      = \color{PTsuccess},
+  numberstyle      = \ttfamily\scriptsize\color{PTmuted},
+  identifierstyle  = \color{PTink},
+  backgroundcolor  = \color{PTsurface},
+  frame            = none,
+  numbers          = none,
+  showstringspaces = false,
+  breaklines       = true,
+  tabsize          = 2,
+  columns          = fullflexible,
+  keepspaces       = true,
+  upquote          = true,
+  xleftmargin      = 2.6mm,
+  xrightmargin     = 2.6mm,
+  framexleftmargin = 2.6mm,
+  aboveskip        = 1.6ex,
+  belowskip        = 1.6ex,
+}
+\lstset{style=PTcodestyle}
+
+\lstnewenvironment{PTcode}[1][]%
+  {\lstset{style=PTcodestyle,#1}\PT@beginLTR}%
+  {\PT@endLTR}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 5. TikZ node styles for block diagrams
+%%
+%%  ALWAYS wrap Persian node text in \PTrl{...}:
+%%
+%%      \node[PTnode] (a) at (0,0) {\PTrl{بازیابی زندهٔ وب}};
+%%
+%%  A TikZ node without `text width' is a plain \hbox, so \everypar never fires
+%%  and bidi never opens a right-to-left run -- the words would come out in the
+%%  wrong order.  \PTrl opens that run explicitly.  The styles below also set
+%%  `align=center', which is the second half of the same insurance policy.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usetikzlibrary{arrows.meta}
+
+\tikzset{
+  PTnode/.style={
+    draw        = PTline,
+    fill        = PTsurface,
+    line width  = .7pt,
+    text        = PTink,
+    align       = center,
+    text width  = 2.15cm,
+    minimum width  = 2.5cm,
+    minimum height = 1.15cm,
+    inner sep   = 1.5mm,
+    font        = \scriptsize,
+  },
+  PTnodemain/.style={
+    PTnode,
+    fill = PTprimarysoft,
+    draw = PTprimary,
+  },
+  PTnodeaccent/.style={
+    PTnode,
+    fill = PTaccentsoft,
+    draw = PTaccentdark,
+  },
+  PTflow/.style={
+    -{Stealth[length=1.7mm,width=1.4mm]},
+    draw       = PTaccentdark,
+    line width = .8pt,
+  },
+  PTflowsoft/.style={
+    PTflow,
+    draw       = PTmuted,
+    dash pattern = on 1.1pt off 1.1pt,
+  },
+  PTcapt/.style={
+    text = PTmuted,
+    font = \tiny,
+    align = center,
+  },
+}
+
+\endinput

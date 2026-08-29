@@ -1,0 +1,154 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%  refs/references.bib
+%%
+%%  اختیاری.  قالب به‌طور پیش‌فرض از فهرست دستیِ content/07-references.tex استفاده
+%%  می‌کند تا با یک بار xelatex هم کامل در بیاید.  اگر biblatex را ترجیح می‌دهید:
+%%
+%%    ۱) در main.tex، پیش از \input{config/fonts.tex} بیفزایید:
+%%         \usepackage[backend=biber,style=numeric-comp,sorting=none]{biblatex}
+%%         \addbibresource{refs/references.bib}
+%%    ۲) در content/07-references.tex بدنهٔ قاب را با این جایگزین کنید:
+%%         \begin{PTltr}\scriptsize\printbibliography[heading=none]\end{PTltr}
+%%    ۳) کامپایل:  xelatex → biber → xelatex → xelatex
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+@inproceedings{lewis2020rag,
+  author    = {Lewis, Patrick and Perez, Ethan and Piktus, Aleksandra and
+               Petroni, Fabio and Karpukhin, Vladimir and Goyal, Naman and
+               K{\"u}ttler, Heinrich and Lewis, Mike and Yih, Wen-tau and
+               Rockt{\"a}schel, Tim and Riedel, Sebastian and Kiela, Douwe},
+  title     = {Retrieval-Augmented Generation for Knowledge-Intensive
+               {NLP} Tasks},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  year      = {2020},
+}
+
+@inproceedings{karpukhin2020dpr,
+  author    = {Karpukhin, Vladimir and O{\u{g}}uz, Barlas and Min, Sewon and
+               Lewis, Patrick and Wu, Ledell and Edunov, Sergey and
+               Chen, Danqi and Yih, Wen-tau},
+  title     = {Dense Passage Retrieval for Open-Domain Question Answering},
+  booktitle = {Proceedings of EMNLP},
+  pages     = {6769--6781},
+  year      = {2020},
+}
+
+@article{gao2024ragsurvey,
+  author  = {Gao, Yunfan and Xiong, Yun and Gao, Xinyu and Jia, Kangxiang and
+             Pan, Jinliu and Bi, Yuxi and Dai, Yi and Sun, Jiawei and
+             Wang, Meng and Wang, Haofen},
+  title   = {Retrieval-Augmented Generation for Large Language Models:
+             A Survey},
+  journal = {arXiv preprint arXiv:2312.10997},
+  year    = {2024},
+}
+
+@inproceedings{vaswani2017,
+  author    = {Vaswani, Ashish and Shazeer, Noam and Parmar, Niki and
+               Uszkoreit, Jakob and Jones, Llion and Gomez, Aidan N. and
+               Kaiser, {\L}ukasz and Polosukhin, Illia},
+  title     = {Attention Is All You Need},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  year      = {2017},
+}
+
+@inproceedings{devlin2019bert,
+  author    = {Devlin, Jacob and Chang, Ming-Wei and Lee, Kenton and
+               Toutanova, Kristina},
+  title     = {{BERT}: Pre-training of Deep Bidirectional Transformers for
+               Language Understanding},
+  booktitle = {Proceedings of NAACL-HLT},
+  pages     = {4171--4186},
+  year      = {2019},
+}
+
+@inproceedings{reimers2019sbert,
+  author    = {Reimers, Nils and Gurevych, Iryna},
+  title     = {{Sentence-BERT}: Sentence Embeddings using Siamese
+               {BERT}-Networks},
+  booktitle = {Proceedings of EMNLP-IJCNLP},
+  year      = {2019},
+}
+
+@article{robertson2009bm25,
+  author  = {Robertson, Stephen and Zaragoza, Hugo},
+  title   = {The Probabilistic Relevance Framework: {BM25} and Beyond},
+  journal = {Foundations and Trends in Information Retrieval},
+  volume  = {3},
+  number  = {4},
+  pages   = {333--389},
+  year    = {2009},
+}
+
+@article{nogueira2019passage,
+  author  = {Nogueira, Rodrigo and Cho, Kyunghyun},
+  title   = {Passage Re-ranking with {BERT}},
+  journal = {arXiv preprint arXiv:1901.04085},
+  year    = {2019},
+}
+
+@inproceedings{khattab2020colbert,
+  author    = {Khattab, Omar and Zaharia, Matei},
+  title     = {{ColBERT}: Efficient and Effective Passage Search via
+               Contextualized Late Interaction over {BERT}},
+  booktitle = {Proceedings of SIGIR},
+  pages     = {39--48},
+  year      = {2020},
+}
+
+@inproceedings{izacard2021fid,
+  author    = {Izacard, Gautier and Grave, Edouard},
+  title     = {Leveraging Passage Retrieval with Generative Models for
+               Open Domain Question Answering},
+  booktitle = {Proceedings of EACL},
+  pages     = {874--880},
+  year      = {2021},
+}
+
+@inproceedings{yao2023react,
+  author    = {Yao, Shunyu and Zhao, Jeffrey and Yu, Dian and Du, Nan and
+               Shafran, Izhak and Narasimhan, Karthik and Cao, Yuan},
+  title     = {{ReAct}: Synergizing Reasoning and Acting in Language Models},
+  booktitle = {Proceedings of ICLR},
+  year      = {2023},
+}
+
+@article{nakano2021webgpt,
+  author  = {Nakano, Reiichiro and Hilton, Jacob and Balaji, Suchir and
+             Wu, Jeff and Ouyang, Long and Kim, Christina and
+             Hesse, Christopher and Jain, Shantanu and Kosaraju, Vineet and
+             Saunders, William and others},
+  title   = {{WebGPT}: Browser-assisted Question-answering with Human
+             Feedback},
+  journal = {arXiv preprint arXiv:2112.09332},
+  year    = {2021},
+}
+
+@inproceedings{asai2024selfrag,
+  author    = {Asai, Akari and Wu, Zeqiu and Wang, Yizhong and Sil, Avirup and
+               Hajishirzi, Hannaneh},
+  title     = {{Self-RAG}: Learning to Retrieve, Generate, and Critique
+               through Self-Reflection},
+  booktitle = {Proceedings of ICLR},
+  year      = {2024},
+}
+
+@inproceedings{es2024ragas,
+  author    = {Es, Shahul and James, Jithin and Espinosa-Anke, Luis and
+               Schockaert, Steven},
+  title     = {{RAGAS}: Automated Evaluation of Retrieval Augmented
+               Generation},
+  booktitle = {Proceedings of EACL: System Demonstrations},
+  pages     = {150--158},
+  year      = {2024},
+}
+
+@article{jarvelin2002ndcg,
+  author  = {J{\"a}rvelin, Kalervo and Kek{\"a}l{\"a}inen, Jaana},
+  title   = {Cumulated Gain-based Evaluation of {IR} Techniques},
+  journal = {ACM Transactions on Information Systems},
+  volume  = {20},
+  number  = {4},
+  pages   = {422--446},
+  year    = {2002},
+}

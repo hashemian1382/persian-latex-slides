@@ -1,0 +1,125 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%  beamerouterthemePersianThesis.sty
+%%  Frame geometry, frame title, head line and foot line.
+%%
+%%  The head/foot cells are built from consecutive \begin{beamercolorbox}es --
+%%  the idiom beamer's own "infolines" theme uses and the one bidi patches for
+%%  right-to-left documents -- while the decorative rules come from
+%%  \PTtitlerule / \PTprogressbar, which are direction-proof by construction.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{beamerouterthemePersianThesis}[2026/08/29 v1.0 Persian thesis outer theme]
+
+\mode<presentation>
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 1. Geometry & furniture we do not want
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setbeamersize{text margin left=\PTmargin,text margin right=\PTmargin}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{sidebar left}{}
+\setbeamertemplate{sidebar right}{}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 2. Head line  (empty by default; optionally a thin progress bar)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setbeamertemplate{headline}{%
+  \ifPTprogresshead\PTprogressbar{\PTprogressht}\fi
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 3. Frame title
+%%
+%%  [ فصل ۲ — مبانی نظری ]      <- eyebrow (current chapter), optional
+%%  عنوان اسلاید                 <- frame title
+%%  زیرعنوان                     <- frame subtitle, only if given
+%%  ───────────────────────▬     <- hairline + accent stub
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\PT@eyebrowline}{%
+  \ifPTeyebrow
+    \ifPTinsection
+      {\usebeamerfont{PT eyebrow}\usebeamercolor[fg]{PT eyebrow}%
+       \PTlabel{chapter}~\insertsectionnumber\,:\,\insertsection\par}%
+      \nointerlineskip\vskip.35ex
+    \fi
+  \fi
+}
+
+\setbeamertemplate{frametitle}{%
+  \nointerlineskip
+  \begin{beamercolorbox}[wd=\paperwidth,sep=0pt,ignorebg,%
+                         leftskip=\PTmargin,rightskip=\PTmargin]{frametitle}%
+    \vskip1.05ex%
+    \PT@eyebrowline
+    {\usebeamerfont{frametitle}\insertframetitle\par}%
+    \ifx\insertframesubtitle\@empty\else
+      \nointerlineskip\vskip.45ex
+      {\usebeamerfont{framesubtitle}\usebeamercolor[fg]{framesubtitle}%
+       \insertframesubtitle\par}%
+    \fi
+    \vskip1.0ex%
+    \PTtitlerule{\linewidth}%
+    \vskip1.1ex%
+  \end{beamercolorbox}%
+}
+
+% "(ادامه)" instead of beamer's roman numerals on \framebreak / allowframebreaks
+\setbeamertemplate{frametitle continuation}{%
+  \usebeamerfont{framesubtitle}\usebeamercolor[fg]{framesubtitle}%
+  \normalfont\ (ادامه)%
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 4. Foot line
+%%
+%%  | دانشگاه ... |   عنوان کوتاه ارائه   |  ۴ از ۲۸ |
+%%  ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬  (progress)
+%%
+%% numbering = fraction | plain | none
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\PT@numbering}{fraction}
+
+\newcommand{\PT@shortuni}{%
+  \PTifempty{\insertPTshortuniversity}%
+    {\insertPTuniversity}{\insertPTshortuniversity}%
+}
+
+\newcommand{\PT@footnumber}{%
+  \ifdefstring{\PT@numbering}{none}{}{%
+    \ifdefstring{\PT@numbering}{plain}{%
+      {\usebeamerfont{footline emph}\usebeamercolor[fg]{footline emph}%
+       \insertframenumber}%
+    }{%
+      {\usebeamerfont{footline emph}\usebeamercolor[fg]{footline emph}%
+       \insertframenumber}%
+      \,\PTlabel{of}\,%
+      \inserttotalframenumber
+    }%
+  }%
+}
+
+% The three cells.  Redefine any of them in config/info.tex if you want a
+% different footer, e.g. \renewcommand{\PTfootcellone}{\insertshortauthor}
+\newcommand{\PTfootcellone}{\PT@shortuni}
+\newcommand{\PTfootcelltwo}{\insertshorttitle}
+\newcommand{\PTfootcellthree}{\PT@footnumber}
+
+\setbeamertemplate{footline}{%
+  \ifPTfootline
+    \hbox{%
+      \begin{beamercolorbox}[wd=.33\paperwidth,ht=2.55ex,dp=1.45ex,center]{footline}%
+        \usebeamerfont{footline}\PTfootcellone
+      \end{beamercolorbox}%
+      \begin{beamercolorbox}[wd=.40\paperwidth,ht=2.55ex,dp=1.45ex,center]{footline}%
+        \usebeamerfont{footline}\PTfootcelltwo
+      \end{beamercolorbox}%
+      \begin{beamercolorbox}[wd=.27\paperwidth,ht=2.55ex,dp=1.45ex,center]{footline}%
+        \usebeamerfont{footline}\PTfootcellthree
+      \end{beamercolorbox}%
+    }%
+  \fi
+  \ifPTprogressfoot\PTprogressbar{\PTprogressht}\fi
+}
+
+\mode<all>
+\endinput
